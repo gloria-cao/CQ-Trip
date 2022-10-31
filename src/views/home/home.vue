@@ -4,53 +4,28 @@
     <div class="banner">
       <img src="@/assets/img/home/banner.webp" alt="" />
     </div>
-    <div class="location">
-      <div class="city">广州</div>
-      <div class="position">
-        <span>我的位置</span>
-        <img src="@/assets/img/home/icon_location.png" alt="" />
-      </div>
-    </div>
+    <home-search-box />
   </div>
 </template>
 
 <script setup>
+import { ref } from "@vue/reactivity";
+
 import HomeNavBar from "./cpns/home-nav-bar.vue";
+import HomeSearchBox from "./cpns/home-search-box.vue";
+import { useHomeStore } from "@/stores/modules/home";
+import { storeToRefs } from "pinia";
+
+// 发送网络请求
+// 1、热门建议 传递给searchbox
+const homeStore = useHomeStore();
+homeStore.fetchHotSuggestData();
 </script>
 
 <style lang="less" scoped>
 .banner {
   img {
     width: 100%;
-  }
-}
-
-.location {
-  display: flex;
-  align-items: center;
-  height: 44px;
-  padding: 0 20px;
-
-  .city {
-    flex: 1;
-  }
-
-  .position {
-    width: 78px;
-    display: flex;
-    align-items: center;
-
-    .text {
-      position: relative;
-      top: 2px;
-      font-size: 12px;
-    }
-
-    img {
-      margin-left: 3px;
-      width: 18px;
-      height: 18px;
-    }
   }
 }
 </style>

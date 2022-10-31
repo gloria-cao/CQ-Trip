@@ -3,8 +3,23 @@
 
   /* 全局修改: 任何地方只要用到-van-tabbar-item-icon-size都会被修改掉 */
   /* --van-tabbar-item-icon-size: 30px !important; */
+
+  /* 全局修改search样式 不生效加上!important */
+  --van-search-left-icon-color: var(--primary-color) !important;
 }
 
 body {
   font-size: 14px;
+}
+/* 隐藏底部tabbar */
+.top-page {
+  position: relative;
+  z-index: 9;
+  height: 100vh;
+  background-color: #fff;
+  overflow: auto;
+}
+
+.bottom-gray-line {
+  border-bottom: 1px solid var(--line-color);
 }
