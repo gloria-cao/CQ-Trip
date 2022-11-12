@@ -18,14 +18,14 @@
       <div class="start">
         <div class="date">
           <span class="tip">入住</span>
-          <span class="time">{{ startDate }}</span>
+          <span class="time">{{ startDateStr }}</span>
         </div>
         <div class="stay">共{{ stayCount }}晚</div>
       </div>
       <div class="end">
         <div class="date">
           <span class="tip">离店</span>
-          <span class="time">{{ endDate }}</span>
+          <span class="time">{{ endDateStr }}</span>
         </div>
       </div>
     </div>
@@ -60,37 +60,29 @@
         </div>
       </template>
     </div>
-    <!-- <div class="list">
-      <template v-for="(item, index) in hotSuggest">
-        <div class="suggests">{{ item.tagText.text }}</div>
-      </template>
-    </div> -->
+
+    <!-- 搜索按钮 -->
+    <div class="section search-btn">
+      <div class="btn" @click="searchBtnClick">开始搜索</div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 
+import useMainStore from "@/stores/modules/main";
 import { useHomeStore } from "@/stores/modules/home";
 import useCityStore from "@/stores/modules/city";
 import { formmatMonthDay, getDiffDays } from "@/utils/fomat_data";
-
-// 定义props
-// const props = defineProps({
-//   hotSuggest: {
-//     type: Array,
-//     default: () => [],
-//   },
-// });
 
 const router = useRouter();
 // 获取当前城市位置 超时问题
 const cityClick = () => {
   router.push("/city");
 };
-
 const positionClick = () => {
   navigator.geolocation.getCurrentPosition(
     (res) => {
@@ -106,23 +98,29 @@ const positionClick = () => {
 const cityStore = useCityStore();
 const { currentCity } = storeToRefs(cityStore);
 
-// 日期范围的处理
-const nowDate = new Date();
-const newDate = new Date();
-newDate.setDate(nowDate.getDate() + 1);
+// // 日期范围的处理
+// const nowDate = new Date();
+// const newDate = new Date();
+// newDate.setDate(nowDate.getDate() + 1);
+const mainStore = useMainStore();
+const { startDate, endDate } = storeToRefs(mainStore);
 
-const startDate = ref(formmatMonthDay(nowDate));
-const endDate = ref(formmatMonthDay(newDate));
-const stayCount = ref(getDiffDays(nowDate, newDate));
+// const startDateStr = ref(formmatMonthDay(startDate));
+// const endDateStr = ref(formmatMonthDay(endDate));
+const startDateStr = computed(() => formmatMonthDay(startDate.value));
+const endDateStr = computed(() => formmatMonthDay(endDate.value));
+const stayCount = ref(getDiffDays(startDate.value, endDate.value));
 
 const showCalendar = ref(false);
 const onConfirm = (value) => {
   // 1.设置日期
   const selectStartDate = value[0];
-  const selectendDate = value[1];
-  startDate.value = formmatMonthDay(selectStartDate);
-  endDate.value = formmatMonthDay(selectendDate);
-  stayCount.value = getDiffDays(selectStartDate, selectendDate);
+  const selectEndDate = value[1];
+  // startDate.value = formmatMonthDay(selectStartDate);
+  // endDate.value = formmatMonthDay(selectendDate);
+  mainStore.startDate = selectStartDate;
+  mainStore.endDate = selectEndDate;
+  stayCount.value = getDiffDays(selectStartDate, selectEndDate);
 
   // 隐藏日历
   showCalendar.value = false;
@@ -130,6 +128,19 @@ const onConfirm = (value) => {
 
 const homeStore = useHomeStore();
 const { hotSuggests } = storeToRefs(homeStore);
+
+// 搜索按钮
+const searchBtnClick = () => {
+  // 跳转同时携带参数
+  router.push({
+    path: "/search",
+    query: {
+      startDate: startDate.value,
+      endDate: endDate.value,
+      currentCity: currentCity.value.cityName,
+    },
+  });
+};
 </script>
 
 <style lang="less" scoped>
@@ -221,6 +232,7 @@ const { hotSuggests } = storeToRefs(homeStore);
 
 .hot-suggests {
   margin: 10px 0;
+  height: auto;
 
   .item {
     padding: 4px 8px;
@@ -231,18 +243,18 @@ const { hotSuggests } = storeToRefs(homeStore);
   }
 }
 
-// .data-range {
-//   display: flex;
-//   text-align: center;
-//   justify-content: center;
-//   .star {
-//     flex: 1;
-//   }
-//   .stay {
-//     flex: 1;
-//   }
-//   .end {
-//     flex: 1;
-//   }
-// }
+.search-btn {
+  .btn {
+    width: 342px;
+    height: 38px;
+    max-height: 50px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 38px;
+    text-align: center;
+    border-radius: 20px;
+    color: #fff;
+    background-image: var(--theme-linear-gradient);
+  }
+}
 </style>
