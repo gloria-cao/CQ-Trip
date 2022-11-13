@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" ref="homeRef">
     <home-nav-bar />
     <div class="banner">
       <img src="@/assets/img/home/banner.webp" alt="" />
@@ -17,7 +17,7 @@
 <script setup>
 import { ref } from "@vue/reactivity";
 import { storeToRefs } from "pinia";
-import { computed, watch } from "@vue/runtime-core";
+import { computed, onActivated, watch } from "@vue/runtime-core";
 
 import { useHomeStore } from "@/stores/modules/home";
 import useScroll from "@/hooks/useScroll";
@@ -39,7 +39,8 @@ homeStore.fetchHouselistData(); // 3.内容
 //   homeStore.fetchHouselistData(homeStore.currentPage);
 // };
 
-const { isReachBottom, scrollTop } = useScroll();
+const homeRef = ref()
+const { isReachBottom, scrollTop } = useScroll(homeRef);
 watch(isReachBottom, (newValue) => {
   if (isReachBottom) {
     homeStore.fetchHouselistData().then(() => {
@@ -60,9 +61,22 @@ watch(isReachBottom, (newValue) => {
 const isShowSearchBar = computed(() => {
   return scrollTop.value >= 360;
 });
+
+// 跳转回home时，保留原来的位置
+onActivated(() => {
+  homeRef.value?.scrollTo ({
+    top: scrollTop.value
+  })
+})
 </script>
 
 <style lang="less" scoped>
+.home {
+  height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding-bottom: 60px;
+}
 .banner {
   img {
     width: 100%;

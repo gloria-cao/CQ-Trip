@@ -30,6 +30,11 @@
   </div>
 </template>
 
+<script>
+// keep-alive
+export default {  name: "home"}
+</script>
+
 <script setup>
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'

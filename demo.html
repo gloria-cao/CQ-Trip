@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <button class="btn">随机数</button>
+
+  <script>
+    const values = [100, 300, 500, 800, 1000]
+
+    const btnEl = document.querySelector('.btn')
+    btnEl.onclick = function () {
+      let currentValues = Math.floor(Math.random() * 1500)
+      foo(currentValues)
+    }
+
+    // 进入函数
+    function foo(currentValues) {
+      let currentIndex = values.length - 1
+      for (let i = 0; i < values.length; i++) {
+        const value = values[i]
+        if (value > currentValues) {
+          currentIndex = i - 1
+          break
+        }
+      }
+      if (currentIndex == -1) return
+      console.log("随机数" + currentValues, "下标" + currentIndex);
+    }
+
+  </script>
+</body>
+
+</html>

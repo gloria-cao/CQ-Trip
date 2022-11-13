@@ -7,7 +7,6 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    copy: typeof import('./src/components/tab-bar/tab-bar copy.vue')['default']
     DetailSection: typeof import('./src/components/detail-section/detail-section.vue')['default']
     HouseItemV3: typeof import('./src/components/house-item-v3/house-item-v3.vue')['default']
     HouseItemV9: typeof import('./src/components/house-item-v9/house-item-v9.vue')['default']
@@ -19,7 +18,6 @@ declare module '@vue/runtime-core' {
     TabBar_01: typeof import('./src/components/tab-bar/tab-bar_01.vue')['default']
     TabBar_02: typeof import('./src/components/tab-bar/tab-bar_02.vue')['default']
     TabControl: typeof import('./src/components/tab-control/tab-control.vue')['default']
-    VanButton: typeof import('vant/es')['Button']
     VanCalendar: typeof import('vant/es')['Calendar']
     VanCell: typeof import('vant/es')['Cell']
     VanIcon: typeof import('vant/es')['Icon']
